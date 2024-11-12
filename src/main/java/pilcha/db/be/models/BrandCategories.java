@@ -7,6 +7,10 @@ import lombok.Data;
 @Table (name = "brand_categorie")
 @Data
 public class BrandCategories {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
