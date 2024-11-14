@@ -4,9 +4,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "brand_categories")
+@IdClass(BrandCategoryId.class)
+@Table(name = "brand_category")
 @Data
-public class BrandCategories {
+public class BrandCategory {
 
     @Id
     @ManyToOne
@@ -17,6 +18,5 @@ public class BrandCategories {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-
 
 }
