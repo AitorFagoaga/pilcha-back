@@ -1,8 +1,12 @@
 package pilcha.db.be.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,9 +23,11 @@ public class Brand {
     @Column(nullable = false)
     private String instagram_url;
     @Column(nullable = false)
-    private String image_urls;
+    private String logoImg;
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BrandImages> imageUrls = new ArrayList<>();
     private String country;
 
-    @OneToMany(mappedBy = "brand")
-    private Set<BrandCategories> brandCategories;
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<BrandCategory> brandCategories = new HashSet<>();
 }
