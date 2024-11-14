@@ -1,2 +1,21 @@
-package pilcha.db.be.dto.BrandCategoryDTO;public class BrandCategoryDTO {
+package pilcha.db.be.dto.BrandCategory;
+
+import lombok.Data;
+
+import java.util.List;
+import java.util.Set;
+
+@Data
+public class BrandCategoryDTO {
+    private String brandName;
+    private String websiteUrl;
+    private String instagramUrl;
+    private String logoImg;
+    private List<String> imageUrls;
+    private String country;
+
+    private List<Long> existingCategoryId;
+    private List<String> newCategoryName;
+    private List<String> newCategoryImageUrl;
 }
+
