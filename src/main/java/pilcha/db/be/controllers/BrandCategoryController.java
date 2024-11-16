@@ -1,6 +1,7 @@
 package pilcha.db.be.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pilcha.db.be.dto.BrandCategory.BrandCategoryDTO;
@@ -32,6 +33,14 @@ public class BrandCategoryController {
     public ResponseEntity<List<BrandCategory>> createBrandWithCategories(@RequestBody BrandCategoryDTO dto) {
         List<BrandCategory> brandCategories = brandCategoryService.createBrandWithCategory(dto);
         return ResponseEntity.ok(brandCategories);
+    }
+
+    @PutMapping("/{brandId}")
+    public ResponseEntity<BrandCategoryDTO> updateBrand(@PathVariable Long brandId, @RequestBody BrandCategoryDTO dto) {
+
+            BrandCategoryDTO updatedBrandCategory = brandCategoryService.updateBrandWithCategory(brandId, dto);
+            return ResponseEntity.ok(updatedBrandCategory);
+
     }
 
 }

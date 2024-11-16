@@ -94,4 +94,98 @@ public class BrandCategoryService {
 
         return brandCategories;
     }
+
+    public BrandCategoryDTO updateBrandWithCategory(Long brandId, BrandCategoryDTO dto) {
+        // Buscar la marca existente
+        Optional<Brand> optionalBrand = brandRepository.findById(brandId);
+        if (!optionalBrand.isPresent()) {
+            throw new RuntimeException("Marca no encontrada con ID: " + brandId);
+        }
+
+        Brand brand = optionalBrand.get();
+
+        // Actualizar los atributos de la marca
+        brand.setName(dto.getBrandName());
+        brand.setWebsite_url(dto.getWebsiteUrl());
+        brand.setInstagram_url(dto.getInstagramUrl());
+        brand.setLogoImg(dto.getLogoImg());
+        brand.setCountry(dto.getCountry());
+
+        // Limpiar las imágenes antiguas y agregar nuevas
+        brand.getImageUrls().clear();
+        for (String imageUrl : dto.getImageUrls()) {
+            BrandImages brandImageUrl = new BrandImages();
+            brandImageUrl.setImageUrl(imageUrl);
+            brandImageUrl.setBrand(brand);
+            brand.getImageUrls().add(brandImageUrl);
+        }
+
+        // Guardar la marca actualizada
+        brandRepository.save(brand);
+
+        // Manejar categorías existentes
+        List<BrandCategory> brandCategories = brandCategoryRepository.findByBrandId(brandId);
+        for (BrandCategory brandCategory : brandCategories) {
+            if (!dto.getExistingCategoryId().contains(brandCategory.getCategory().getId())) {
+                brandCategoryRepository.delete(brandCategory);
+            }
+        }
+
+        // Manejar categorías existentes
+        if (dto.getExistingCategoryId() != null) {
+            for (Long existingCategoryId : dto.getExistingCategoryId()) {
+                Optional<Category> existingCategory = categoryRepository.findById(existingCategoryId);
+                if (existingCategory.isPresent()) {
+                    // Solo agregar si no existe ya
+                    if (brandCategories.stream().noneMatch(bc -> bc.getCategory().getId().equals(existingCategoryId))) {
+                        BrandCategory brandCategory = new BrandCategory();
+                        brandCategory.setBrand(brand);
+                        brandCategory.setCategory(existingCategory.get());
+                        brandCategoryRepository.save(brandCategory);
+                    }
+                } else {
+                    throw new RuntimeException("Categoría no encontrada con ID: " + existingCategoryId);
+                }
+            }
+        }
+
+        // Manejar nuevas categorías
+        if (dto.getNewCategoryName() != null && dto.getNewCategoryImageUrl() != null) {
+            for (int i = 0; i < dto.getNewCategoryName().size(); i++) {
+                Category newCategory = new Category();
+                newCategory.setName(dto.getNewCategoryName().get(i));
+                newCategory.setImage_url(dto.getNewCategoryImageUrl().get(i));
+                categoryRepository.save(newCategory);
+
+                BrandCategory brandCategory = new BrandCategory();
+                brandCategory.setBrand(brand);
+                brandCategory.setCategory(newCategory);
+                brandCategoryRepository.save(brandCategory);
+            }
+        }
+
+        // Retornar la información actualizada
+        return convertToDTO(brand);
+    }
+
+    private BrandCategoryDTO convertToDTO(Brand brand) {
+        // Obtener las categorías asociadas a la marca
+        List<Long> categoryIds = brandCategoryRepository.findByBrandId(brand.getId()).stream()
+                .map(bc -> bc.getCategory().getId())
+                .collect(Collectors.toList());
+
+        return BrandCategoryDTO.builder()
+                .brandName(brand.getName())
+                .websiteUrl(brand.getWebsite_url())
+                .instagramUrl(brand.getInstagram_url())
+                .logoImg(brand.getLogoImg())
+                .imageUrls(brand.getImageUrls().stream()
+                        .map(BrandImages::getImageUrl)
+                        .collect(Collectors.toList()))
+                .country(brand.getCountry())
+                .existingCategoryId(categoryIds)
+                .newCategoryName(null)  // Inicializar como null si no se está usando
+                .newCategoryImageUrl(null)  // Inicializar como null si no se está usando
+                .build();
+    }
 }

@@ -17,5 +17,7 @@ public class CategoryDTO {
     private String name;
     private String image_url;
     private Set<BrandCategoryDTO> brandCategory;
+    private List<Long> brandCategoryIds;
+
 
 }

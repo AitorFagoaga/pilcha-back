@@ -1,11 +1,13 @@
 package pilcha.db.be.dto;
 
+import lombok.Builder;
 import lombok.Data;
 import pilcha.db.be.models.BrandImages;
 
 import java.util.List;
 
 @Data
+@Builder
 public class BrandDTO {
     private Long id;
     private String name;

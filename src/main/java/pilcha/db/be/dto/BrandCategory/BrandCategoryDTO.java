@@ -1,11 +1,13 @@
 package pilcha.db.be.dto.BrandCategory;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 import java.util.Set;
 
 @Data
+@Builder
 public class BrandCategoryDTO {
     private String brandName;
     private String websiteUrl;
