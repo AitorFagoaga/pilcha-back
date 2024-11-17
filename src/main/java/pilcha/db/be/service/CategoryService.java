@@ -48,8 +48,7 @@ public class CategoryService {
         }
 
         Category category = optionalCategory.get();
-        category.setName(dto.getName()); // Asumiendo que solo estamos actualizando el nombre
-        // Puedes agregar más campos aquí si es necesario
+        category.setName(dto.getName());
 
         categoryRepository.save(category);
 
