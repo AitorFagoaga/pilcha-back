@@ -30,4 +30,7 @@ public class Brand {
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<BrandCategory> brandCategories = new HashSet<>();
+
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<BrandGarment> brandGarment = new HashSet<>();
 }
