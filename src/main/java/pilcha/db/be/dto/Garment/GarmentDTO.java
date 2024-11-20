@@ -13,4 +13,5 @@ public class GarmentDTO {
     private String description;
     private String image_url;
     private List<Long> brandIds;
+    private List<String> brandNames;
 }

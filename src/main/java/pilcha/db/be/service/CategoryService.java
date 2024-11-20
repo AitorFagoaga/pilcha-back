@@ -29,13 +29,21 @@ public class CategoryService {
         List<Category> category = categoryRepository.findAll();
 
         return category.stream().map(categories -> {
+            List<BrandCategory> brandCategories = brandCategoryRepository.findByCategoryId(categories.getId());
+
+            List<Long> brandIds = brandCategories.stream()
+                    .map(bc -> bc.getBrand().getId())
+                    .collect(Collectors.toList());
+            List<String> brandNames = brandCategories.stream()
+                    .map(bc -> bc.getBrand().getName())
+                    .collect(Collectors.toList());
+
             CategoryDTO dto = CategoryDTO.builder()
                     .id(categories.getId())
                     .name(categories.getName())
                     .image_url(categories.getImage_url())
-                    .brandCategoryIds(brandCategoryRepository.findByCategoryId(categories.getId()).stream()
-                            .map(bc -> bc.getBrand().getId())
-                            .collect(Collectors.toList()))
+                    .brandCategoryIds(brandIds)
+                    .brandCategoryNames(brandNames)
                     .build();
             return dto;
         }).collect(Collectors.toList());

@@ -17,4 +17,5 @@ public class BrandDTO {
     private List<String> imageUrls;
     private String country;
     private List<Long> brandCategoryIds;
+    private List<String> brandCategoryNames;
 }

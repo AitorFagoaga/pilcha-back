@@ -27,7 +27,16 @@ public class BrandService {
         System.out.println("Number of brands found: " + brands.size());
 
         return brands.stream().map(brand -> {
-            // Usar el builder para crear una instancia de BrandDTO
+            List<BrandCategory> brandCategories = brandCategoryRepository.findByBrandId(brand.getId());
+
+            List<Long> categoryIds = brandCategories.stream()
+                    .map(bc -> bc.getCategory().getId())
+                    .collect(Collectors.toList());
+
+            List<String> categoryNames = brandCategories.stream()
+                    .map(bc -> bc.getCategory().getName())
+                    .collect(Collectors.toList());
+
             BrandDTO dto = BrandDTO.builder()
                     .id(brand.getId())
                     .name(brand.getName())
@@ -38,14 +47,14 @@ public class BrandService {
                     .imageUrls(brand.getImageUrls().stream()
                             .map(BrandImages::getImageUrl)
                             .collect(Collectors.toList()))
-                    .brandCategoryIds(brandCategoryRepository.findByBrandId(brand.getId()).stream()
-                            .map(bc -> bc.getCategory().getId())
-                            .collect(Collectors.toList()))
+                    .brandCategoryIds(categoryIds)
+                    .brandCategoryNames(categoryNames)
                     .build();
 
             return dto;
         }).collect(Collectors.toList());
     }
+
 
     public Brand findById(Long brandId) {
         return brandRepository.findById(brandId)
@@ -55,7 +64,6 @@ public class BrandService {
     public BrandDTO deleteBrand(Long brandId) {
         Brand brand = findById(brandId);
 
-        // Convertir la marca a DTO antes de eliminarla
         BrandDTO brandDTO = BrandDTO.builder()
                 .id(brand.getId())
                 .name(brand.getName())
@@ -68,16 +76,13 @@ public class BrandService {
                         .collect(Collectors.toList()))
                 .build();
 
-        // Eliminar relaciones de BrandCategory
         List<BrandCategory> brandCategories = brandCategoryRepository.findByBrandId(brandId);
         for (BrandCategory brandCategory : brandCategories) {
             brandCategoryRepository.delete(brandCategory);
         }
 
-        // Eliminar la marca
         brandRepository.delete(brand);
 
-        // Retornar el DTO de la marca eliminada
         return brandDTO;
     }
 }

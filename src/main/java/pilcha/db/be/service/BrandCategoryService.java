@@ -36,14 +36,12 @@ public class BrandCategoryService {
     public List<Category> getCategoriesByBrandId(Long brandId) {
         List<BrandCategory> brandCategories = brandCategoryRepository.findByBrandId(brandId);
 
-        // Extraer las categorías de las relaciones
         return brandCategories.stream()
                 .map(BrandCategory::getCategory)
                 .collect(Collectors.toList());
     }
 
     public List<BrandCategory> createBrandWithCategory(BrandCategoryDTO dto) {
-        // Crear la nueva marca
         Brand brand = new Brand();
         brand.setName(dto.getBrandName());
         brand.setWebsite_url(dto.getWebsiteUrl());
@@ -62,7 +60,6 @@ public class BrandCategoryService {
 
         List<BrandCategory> brandCategories = new ArrayList<>();
 
-        // Manejar categorías existentes
         if (dto.getExistingCategoryId() != null) {
             for (Long existingCategoryId : dto.getExistingCategoryId()) {
                 Optional<Category> existingCategory = categoryRepository.findById(existingCategoryId);
@@ -77,7 +74,6 @@ public class BrandCategoryService {
             }
         }
 
-        // Manejar nuevas categorías
         if (dto.getNewCategoryName() != null && dto.getNewCategoryImageUrl() != null) {
             for (int i = 0; i < dto.getNewCategoryName().size(); i++) {
                 Category newCategory = new Category();
@@ -96,7 +92,6 @@ public class BrandCategoryService {
     }
 
     public BrandCategoryDTO updateBrandWithCategory(Long brandId, BrandCategoryDTO dto) {
-        // Buscar la marca existente
         Optional<Brand> optionalBrand = brandRepository.findById(brandId);
         if (!optionalBrand.isPresent()) {
             throw new RuntimeException("Marca no encontrada con ID: " + brandId);
@@ -104,14 +99,12 @@ public class BrandCategoryService {
 
         Brand brand = optionalBrand.get();
 
-        // Actualizar los atributos de la marca
         brand.setName(dto.getBrandName());
         brand.setWebsite_url(dto.getWebsiteUrl());
         brand.setInstagram_url(dto.getInstagramUrl());
         brand.setLogoImg(dto.getLogoImg());
         brand.setCountry(dto.getCountry());
 
-        // Limpiar las imágenes antiguas y agregar nuevas
         brand.getImageUrls().clear();
         for (String imageUrl : dto.getImageUrls()) {
             BrandImages brandImageUrl = new BrandImages();
@@ -120,10 +113,8 @@ public class BrandCategoryService {
             brand.getImageUrls().add(brandImageUrl);
         }
 
-        // Guardar la marca actualizada
         brandRepository.save(brand);
 
-        // Manejar categorías existentes
         List<BrandCategory> brandCategories = brandCategoryRepository.findByBrandId(brandId);
         for (BrandCategory brandCategory : brandCategories) {
             if (!dto.getExistingCategoryId().contains(brandCategory.getCategory().getId())) {
@@ -131,7 +122,6 @@ public class BrandCategoryService {
             }
         }
 
-        // Manejar categorías existentes
         if (dto.getExistingCategoryId() != null) {
             for (Long existingCategoryId : dto.getExistingCategoryId()) {
                 Optional<Category> existingCategory = categoryRepository.findById(existingCategoryId);
@@ -149,7 +139,6 @@ public class BrandCategoryService {
             }
         }
 
-        // Manejar nuevas categorías
         if (dto.getNewCategoryName() != null && dto.getNewCategoryImageUrl() != null) {
             for (int i = 0; i < dto.getNewCategoryName().size(); i++) {
                 Category newCategory = new Category();
@@ -164,12 +153,10 @@ public class BrandCategoryService {
             }
         }
 
-        // Retornar la información actualizada
         return convertToDTO(brand);
     }
 
     private BrandCategoryDTO convertToDTO(Brand brand) {
-        // Obtener las categorías asociadas a la marca
         List<Long> categoryIds = brandCategoryRepository.findByBrandId(brand.getId()).stream()
                 .map(bc -> bc.getCategory().getId())
                 .collect(Collectors.toList());
@@ -184,8 +171,8 @@ public class BrandCategoryService {
                         .collect(Collectors.toList()))
                 .country(brand.getCountry())
                 .existingCategoryId(categoryIds)
-                .newCategoryName(null)  // Inicializar como null si no se está usando
-                .newCategoryImageUrl(null)  // Inicializar como null si no se está usando
+                .newCategoryName(null)
+                .newCategoryImageUrl(null)
                 .build();
     }
 }

@@ -24,7 +24,9 @@ public class Brand {
     private String instagram_url;
     @Column(nullable = false)
     private String logoImg;
+
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<BrandImages> imageUrls = new ArrayList<>();
     private String country;
 
