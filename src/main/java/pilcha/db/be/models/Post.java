@@ -5,9 +5,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "brand_image")
+@Table(name = "post")
 @Data
-public class BrandImages {
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,6 +17,20 @@ public class BrandImages {
     @JsonBackReference
     private Brand brand;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    @JsonBackReference
+    private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "garment_id")
+    @JsonBackReference
+    private Garment garment;
+
     @Column(name = "image_url")
     private String imageUrl;
+    @Column(name = "nombre")
+    private String nombre;
+    @Column(name = "descripcion")
+    private String descripcion;
 }

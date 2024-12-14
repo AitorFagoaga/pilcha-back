@@ -1,8 +1,7 @@
-package pilcha.db.be.dto;
+package pilcha.db.be.dto.Brand;
 
 import lombok.Builder;
 import lombok.Data;
-import pilcha.db.be.models.BrandImages;
 
 import java.util.List;
 
@@ -11,6 +10,7 @@ import java.util.List;
 public class BrandDTO {
     private Long id;
     private String name;
+    private String description;
     private String websiteUrl;
     private String instagramUrl;
     private String logoImg;

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import pilcha.db.be.dto.BrandCategory.BrandCategoryDTO;
-import pilcha.db.be.dto.BrandDTO;
 
 import java.util.List;
 import java.util.Set;

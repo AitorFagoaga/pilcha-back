@@ -3,12 +3,11 @@ package pilcha.db.be.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pilcha.db.be.dto.BrandCategory.BrandCategoryDTO;
-import pilcha.db.be.dto.BrandDTO;
 import pilcha.db.be.dto.Category.CategoryDTO;
 import pilcha.db.be.models.Brand;
-import pilcha.db.be.models.BrandImages;
 import pilcha.db.be.models.Category;
 import pilcha.db.be.models.BrandCategory;
+import pilcha.db.be.models.Post;
 import pilcha.db.be.repository.CategoryRepository;
 import pilcha.db.be.repository.BrandCategoryRepository;
 
@@ -100,7 +99,7 @@ public class CategoryService {
                                 .instagramUrl(bc.getBrand().getInstagram_url())
                                 .logoImg(bc.getBrand().getLogoImg())
                                 .imageUrls(bc.getBrand().getImageUrls().stream()
-                                        .map(BrandImages::getImageUrl)
+                                        .map(Post::getImageUrl)
                                         .collect(Collectors.toList()))
                                 .country(bc.getBrand().getCountry())
                                 .build())

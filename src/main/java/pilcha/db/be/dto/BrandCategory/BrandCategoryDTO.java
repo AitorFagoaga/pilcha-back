@@ -10,12 +10,12 @@ import java.util.Set;
 @Builder
 public class BrandCategoryDTO {
     private String brandName;
+    private String description;
     private String websiteUrl;
     private String instagramUrl;
     private String logoImg;
     private List<String> imageUrls;
     private String country;
-
     private List<Long> existingCategoryId;
     private List<String> newCategoryName;
     private List<String> newCategoryImageUrl;

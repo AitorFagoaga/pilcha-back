@@ -3,11 +3,10 @@ package pilcha.db.be.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pilcha.db.be.dto.BrandCategory.BrandCategoryDTO;
-import pilcha.db.be.dto.BrandDTO;
 import pilcha.db.be.models.Brand;
-import pilcha.db.be.models.BrandImages;
 import pilcha.db.be.models.Category;
 import pilcha.db.be.models.BrandCategory;
+import pilcha.db.be.models.Post;
 import pilcha.db.be.repository.BrandCategoryRepository;
 import pilcha.db.be.repository.BrandRepository;
 import pilcha.db.be.repository.CategoryRepository;
@@ -50,7 +49,7 @@ public class BrandCategoryService {
         brand.setCountry(dto.getCountry());
 
         for (String imageUrl : dto.getImageUrls()) {
-            BrandImages brandImageUrl = new BrandImages();
+            Post brandImageUrl = new Post();
             brandImageUrl.setImageUrl(imageUrl);
             brandImageUrl.setBrand(brand);
             brand.getImageUrls().add(brandImageUrl);
@@ -107,7 +106,7 @@ public class BrandCategoryService {
 
         brand.getImageUrls().clear();
         for (String imageUrl : dto.getImageUrls()) {
-            BrandImages brandImageUrl = new BrandImages();
+            Post brandImageUrl = new Post();
             brandImageUrl.setImageUrl(imageUrl);
             brandImageUrl.setBrand(brand);
             brand.getImageUrls().add(brandImageUrl);
@@ -167,7 +166,7 @@ public class BrandCategoryService {
                 .instagramUrl(brand.getInstagram_url())
                 .logoImg(brand.getLogoImg())
                 .imageUrls(brand.getImageUrls().stream()
-                        .map(BrandImages::getImageUrl)
+                        .map(Post::getImageUrl)
                         .collect(Collectors.toList()))
                 .country(brand.getCountry())
                 .existingCategoryId(categoryIds)

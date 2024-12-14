@@ -19,15 +19,18 @@ public class Brand {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
+    private String description;
+    @Column(nullable = false)
     private String website_url;
     @Column(nullable = false)
     private String instagram_url;
     @Column(nullable = false)
     private String logoImg;
-
+    @Column(nullable = false)
+    private String email_oficial;
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<BrandImages> imageUrls = new ArrayList<>();
+    private List<Post> imageUrls = new ArrayList<>();
     private String country;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

@@ -2,11 +2,11 @@ package pilcha.db.be.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pilcha.db.be.dto.Brand.BrandDTO;
 import pilcha.db.be.dto.BrandCategory.BrandCategoryDTO;
-import pilcha.db.be.dto.BrandDTO;
 import pilcha.db.be.models.Brand;
 import pilcha.db.be.models.BrandCategory;
-import pilcha.db.be.models.BrandImages;
+import pilcha.db.be.models.Post;
 import pilcha.db.be.repository.BrandCategoryRepository;
 import pilcha.db.be.repository.BrandRepository;
 
@@ -45,7 +45,7 @@ public class BrandService {
                     .logoImg(brand.getLogoImg())
                     .country(brand.getCountry())
                     .imageUrls(brand.getImageUrls().stream()
-                            .map(BrandImages::getImageUrl)
+                            .map(Post::getImageUrl)
                             .collect(Collectors.toList()))
                     .brandCategoryIds(categoryIds)
                     .brandCategoryNames(categoryNames)
