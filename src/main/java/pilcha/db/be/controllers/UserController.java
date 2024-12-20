@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pilcha.db.be.dto.User.LoginResponseDTO;
 import pilcha.db.be.dto.User.UserDTO;
 import pilcha.db.be.dto.User.UserRequestBodyDTO;
 import pilcha.db.be.models.User;
@@ -43,15 +44,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody UserRequestBodyDTO dto) {
-        boolean isAuthenticated = userService.login(dto.getEmail(), dto.getPassword());
-
-        if (isAuthenticated) {
-            String token = jwtUtil.generateToken(dto.getEmail());
-            return ResponseEntity.ok(token);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales incorrectas");
+    public ResponseEntity<LoginResponseDTO> loginUser(@RequestBody UserRequestBodyDTO dto) {
+        try {
+            LoginResponseDTO response = userService.login(dto.getEmail(), dto.getPassword());
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
+
 
 }

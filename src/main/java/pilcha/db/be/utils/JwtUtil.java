@@ -2,6 +2,7 @@ package pilcha.db.be.utils;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -10,10 +11,12 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "TuClaveSecretaSuperSeguraDeAlMenos32Caracteres";
-    private static final long EXPIRATION_TIME = 86400000; // 1 día en milisegundos
+    private final Key key;
+    private static final long EXPIRATION_TIME = 86400000;
 
-    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    public JwtUtil(@Value("${jwt.secret.key}") String secretKey) {
+        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+    }
 
     public String generateToken(String username) {
         return Jwts.builder()

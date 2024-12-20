@@ -3,10 +3,12 @@ package pilcha.db.be.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pilcha.db.be.dto.User.LoginResponseDTO;
 import pilcha.db.be.dto.User.UserDTO;
 import pilcha.db.be.dto.User.UserRequestBodyDTO;
 import pilcha.db.be.models.User;
 import pilcha.db.be.repository.UserRepository;
+import pilcha.db.be.utils.JwtUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,9 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     public List<UserDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream().map(this::convertToDTO).collect(Collectors.toList());
@@ -29,6 +34,7 @@ public class UserService {
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
+        user.setAge(dto.getAge());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setCreatedAt(dto.getCreatedAt());
         user.setIs_premium(dto.getIsPremium());
@@ -37,15 +43,31 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public boolean login(String email, String rawPassword) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if (!optionalUser.isPresent()) {
-            return false;
+    public LoginResponseDTO login(String email, String rawPassword) {
+        // Buscar el usuario por email
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
+
+        // Validar la contraseña
+        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+            throw new RuntimeException("Contraseña incorrecta.");
         }
 
-        User user = optionalUser.get();
-        return passwordEncoder.matches(rawPassword, user.getPassword());
+        // Generar el token JWT
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        // Construir el LoginResponseDTO usando Lombok's Builder
+        return LoginResponseDTO.builder()
+                .token(token)
+                .id(user.getId().toString())
+                .email(user.getEmail())
+                .age(user.getAge())
+                .username(user.getUsername())
+                .isPremium(user.getIs_premium())
+                .isBrand(user.getIs_brand())
+                .build();
     }
+
 
     public UserDTO updateUser(Long userId, UserRequestBodyDTO dto) {
         User user = userRepository.findById(userId)

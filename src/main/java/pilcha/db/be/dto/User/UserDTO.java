@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public class UserDTO {
     private Long id;
     private String username;
+    private Integer age;
     private String email;
     private LocalDateTime createdAt;
     private Boolean isPremium;

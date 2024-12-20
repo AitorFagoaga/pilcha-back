@@ -16,6 +16,11 @@ public class UserFavoriteController {
     @Autowired
     private UserFavoriteService userFavoriteService;
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<Long>> getFavoriteBrandIds(@PathVariable Long userId) {
+        List<Long> brandIds = userFavoriteService.getFavoriteBrandIdsByUser(userId);
+        return ResponseEntity.ok(brandIds);
+    }
     @PostMapping
     public UserFavorite createFavorite(@RequestBody UserFavoriteDTO dto){
         UserFavorite userFavorites = userFavoriteService.createFavorite(dto);

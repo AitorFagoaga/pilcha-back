@@ -27,6 +27,16 @@ public class UserFavoriteService {
     @Autowired
     private BrandRepository brandRepository;
 
+    public List<Long> getFavoriteBrandIdsByUser(Long userId) {
+        List<UserFavorite> favorites = userFavoriteRepository.findByUserId(userId);
+        if (favorites.isEmpty()) {
+            throw new RuntimeException("User not found or has no favorites");
+        }
+        return favorites.stream()
+                .map(favorite -> favorite.getBrand().getId())
+                .collect(Collectors.toList());
+    }
+
     public UserFavorite createFavorite(UserFavoriteDTO dto){
         Optional<User> userOptional = userRepository.findById(dto.getUserId());
         Optional<Brand> brandOptional = brandRepository.findById(dto.getBrandId());

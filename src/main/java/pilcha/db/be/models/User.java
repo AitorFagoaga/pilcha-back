@@ -16,6 +16,7 @@ public class User {
     private String username;
     @Column(nullable = false)
     private String email;
+    private Integer age;
     @Column(nullable = false)
     private String password;
     @Column(name = "created_at", updatable = false)
