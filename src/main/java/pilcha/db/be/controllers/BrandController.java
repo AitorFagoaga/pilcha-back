@@ -21,6 +21,14 @@ public class BrandController {
         return brandService.getAllBrands();
     }
 
+    @GetMapping("/search")
+    public List<BrandDTO> searchBrands(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String garment) {
+        return brandService.searchBrands(name, category, garment);
+    }
+
     @DeleteMapping("/{brandId}")
     public ResponseEntity<BrandDTO> deleteBrand(@PathVariable Long brandId) {
         BrandDTO deleteBrand = brandService.deleteBrand(brandId);
